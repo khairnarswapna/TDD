@@ -1,23 +1,40 @@
 package com.cabinvoicegenerator;
 
 public class InvoiceService {
-    private static final double MIN_COST_PER_KILOMETER =10 ;
-    private static final int COST_PER_TIME = 1;
-    private static final int MINIMUM_FARE = 5;
-    private final RideRepository rideRepository;
+    
+    private static final double MINIMUM_NORMAL_COST_PER_KILOMETER = 10;
+    private static final double MINIMUM_PREMIUM_COST_PER_KILOMETER = 15;
+    private static final int NORMAL_COST_PER_TIME = 1;
+    private static final int PREMIUM_COST_PER_TIME = 2;
+    private static final double MINIMUM_NORMAL_FARE = 5;
+    private static final double MINIMUM_PREMIUM_FARE = 20;
+    private final CabRidesType cabRidesType;
 
-    public InvoiceService() {
+    RideRepository rideRepository=null;
+
+    public enum CabRidesType {
+        NORMAL_RIDES, PREMIUM_RIDES
+    };
+
+    public InvoiceService(CabRidesType cabRidesType) {
         this.rideRepository=new RideRepository();
+        this.cabRidesType=cabRidesType;
     }
 
-    public double calculateFare(double distance, int time) {
-        double totalAmount = distance * MIN_COST_PER_KILOMETER + time * COST_PER_TIME;
-        if( totalAmount < MINIMUM_FARE)
-            return MINIMUM_FARE;
-        return totalAmount;
+    public double calculateFare(double distance, int time) throws CustomException {
+        double totalFare = 0.0;
+        if (this.cabRidesType.equals(CabRidesType.NORMAL_RIDES)) {
+            totalFare = distance * MINIMUM_NORMAL_COST_PER_KILOMETER + time * NORMAL_COST_PER_TIME;
+            return Math.max(totalFare, MINIMUM_NORMAL_FARE);
+        }
+        if (this.cabRidesType.equals(CabRidesType.PREMIUM_RIDES)) {
+            totalFare = distance * MINIMUM_PREMIUM_COST_PER_KILOMETER + time * PREMIUM_COST_PER_TIME;
+            return Math.max(totalFare, MINIMUM_PREMIUM_FARE);
+        }
+        throw new CustomException(CustomException.ExceptionType.INVALID_CABRIDETYPE, "Invalid Cab Ride type");
     }
 
-    public InvoiceSummary calculateFare(Ride[] rides) {
+    public InvoiceSummary calculateFare(Ride[] rides) throws CustomException {
         double totalFare=0;
         for(Ride ride: rides){
             totalFare += this.calculateFare(ride.distance,ride.time);
@@ -30,7 +47,7 @@ public class InvoiceService {
         rideRepository.addRide(userId,rides);
     }
 
-    public InvoiceSummary getInvoiceSummary(String userId) {
+    public InvoiceSummary getInvoiceSummary(String userId) throws CustomException {
         Ride[] rides = rideRepository.getRides(userId);
         return this.calculateFare(rides);
     }
