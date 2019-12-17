@@ -31,22 +31,20 @@ public class InvoiceService {
             totalFare = distance * MINIMUM_PREMIUM_COST_PER_KILOMETER + time * PREMIUM_COST_PER_TIME;
             return Math.max(totalFare, MINIMUM_PREMIUM_FARE);
         }
-        throw new CustomException(CustomException.ExceptionType.INVALID_CABRIDETYPE, "Invalid Cab Ride type");
+        throw new CustomException(CustomException.ExceptionType.INVALID_CAB_RIDE_TYPE, "Invalid Cab Ride type");
     }
 
     public InvoiceSummary calculateFare(Ride[] rides) throws CustomException {
         double totalFare=0;
         for(Ride ride: rides){
             totalFare += this.calculateFare(ride.distance,ride.time);
-
         }
         return new InvoiceSummary(rides.length,totalFare);
     }
 
-    public void addRides(String userId, Ride[] rides) {
+    public void addRides(String userId, Ride[] rides) throws CustomException {
         rideRepository.addRide(userId,rides);
     }
-
     public InvoiceSummary getInvoiceSummary(String userId) throws CustomException {
         Ride[] rides = rideRepository.getRides(userId);
         return this.calculateFare(rides);
