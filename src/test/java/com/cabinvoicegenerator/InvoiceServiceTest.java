@@ -6,50 +6,49 @@ import org.junit.Test;
 
 public class InvoiceServiceTest {
     
-    InvoiceService invoiceGenerator=null;
+    InvoiceService invoiceService =null;
     @Before
     
     @Test
     public void givendistance_And_TimeShould_ReturnTotalFare() throws CustomException {
-        InvoiceService invoiceGenerator=new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
+        InvoiceService invoiceService=new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
         double distance = 2.0;
         int time = 5;
-        double fare=invoiceGenerator.calculateFare(distance,time);
+        double fare=invoiceService.calculateFare(distance,time);
         Assert.assertEquals(25,fare,0.0);
     }
 
     @Test
     public void  givenLessDistanceOrTime_shouldReturnMinFare() throws CustomException {
 
-        InvoiceService invoiceGenerator=new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
+        InvoiceService invoiceService=new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
         double distance = 0.1;
         int time = 1;
-        double fare=invoiceGenerator.calculateFare(distance,time);
+        double fare=invoiceService.calculateFare(distance,time);
         Assert.assertEquals(5,fare,0.0);
 
     }
 
-
     @Test
     public void givenMultipleRide_shouldReturnInvoiceSummary() throws CustomException {
-        InvoiceService invoiceGenerator = new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
+        InvoiceService invoiceService = new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
         Ride[] rides= { new Ride(2.0, 5),
                         new Ride(0.1, 1)
                       };
-        InvoiceSummary invoiceSummary = invoiceGenerator.calculateFare(rides);
+        InvoiceSummary invoiceSummary = invoiceService.calculateFare(rides);
         InvoiceSummary expectedInvoiceSummary=new InvoiceSummary(2,30);
         Assert.assertEquals(expectedInvoiceSummary,invoiceSummary);
     }
 
     @Test
     public void givenUserIDAndRides_shouldReturnInvoiceSummary() throws CustomException {
-        InvoiceService invoiceGenerator = new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
+        InvoiceService invoiceService  = new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
         String userId="a@b.com";
         Ride[] rides= { new Ride(2.0, 5),
                         new Ride(0.1, 1)
                     };
-        invoiceGenerator.addRides(userId,rides);
-        InvoiceSummary summary=invoiceGenerator.getInvoiceSummary(userId);
+        invoiceService.addRides(userId,rides);
+        InvoiceSummary summary=invoiceService.getInvoiceSummary(userId);
         InvoiceSummary expectedInvoiceSummary=new InvoiceSummary(2,30);
         Assert.assertEquals(expectedInvoiceSummary,summary);
     }
