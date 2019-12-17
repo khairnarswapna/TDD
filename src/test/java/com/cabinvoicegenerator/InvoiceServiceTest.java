@@ -8,7 +8,7 @@ public class InvoiceServiceTest {
     
     InvoiceService invoiceService =null;
     @Before
-    
+
     @Test
     public void givendistance_And_TimeShould_ReturnTotalFare() throws CustomException {
         InvoiceService invoiceService=new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
@@ -31,6 +31,7 @@ public class InvoiceServiceTest {
 
     @Test
     public void givenMultipleRide_shouldReturnInvoiceSummary() throws CustomException {
+
         InvoiceService invoiceService = new InvoiceService(InvoiceService.CabRidesType.NORMAL_RIDES);
         Ride[] rides= { new Ride(2.0, 5),
                         new Ride(0.1, 1)
@@ -68,13 +69,13 @@ public class InvoiceServiceTest {
     }
 
     @Test
-    public void givenUserId_WithPremiumWithMultipleRides_ShouldReturnInvoiceSummary() {
+    public void givenUserId_PremiumWithMultipleRides_ShouldReturnInvoiceSummary() {
         try {
             InvoiceService invoiceService = new InvoiceService(InvoiceService.CabRidesType.PREMIUM_RIDES);
             String userId = "a@b.com";
-            Ride[] rides = {new Ride(2.0, 5),
-                    new Ride(0.1, 1)
-            };
+            Ride[] rides = { new Ride(2.0, 5),
+                             new Ride(0.1, 1)
+                            };
             invoiceService.addRides(userId, rides);
             InvoiceSummary summary = null;
             summary = invoiceService.getInvoiceSummary(userId);
