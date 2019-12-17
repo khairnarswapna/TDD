@@ -59,11 +59,11 @@ public class InvoiceServiceTest {
         try {
             InvoiceService invoiceService = new InvoiceService(InvoiceService.CabRidesType.PREMIUM_RIDES);
             String userId = "abc@gmail.com";
-            double distance = 15;
+            double distance = 10;
             int time = 2;
             double fare = 0;
             fare = invoiceService.calculateFare(distance, time);
-            Assert.assertEquals(229.0, fare, 0.0);
+            Assert.assertEquals(154.0, fare, 0.0);
         } catch (CustomException e) {
         }
     }
